@@ -1,5 +1,10 @@
+# WISE Math Battle V1（中文版完整整合）
+
+把下面完整代码全部复制到你的 `index.html`。
+
+```html
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,6 +42,7 @@ body{
     padding:10px 20px;
     border-radius:20px;
     box-shadow:0 4px 10px rgba(0,0,0,0.2);
+    color:black;
 }
 
 .battleArea{
@@ -117,6 +123,7 @@ button{
     cursor:pointer;
     background:#ffcc00;
     transition:0.2s;
+    box-shadow:0 4px 8px rgba(0,0,0,0.2);
 }
 
 button:hover{
@@ -173,9 +180,9 @@ button{
 <div id="game">
 
     <div class="topBar">
-        <div class="card">⭐ EXP: <span id="exp">0</span></div>
-        <div class="card">🪙 Coins: <span id="coins">0</span></div>
-        <div class="card">🏆 Level: <span id="level">1</span></div>
+        <div class="card">⭐ 经验值: <span id="exp">0</span></div>
+        <div class="card">🪙 金币: <span id="coins">0</span></div>
+        <div class="card">🏆 等级: <span id="level">1</span></div>
     </div>
 
     <div class="battleArea">
@@ -185,7 +192,7 @@ button{
                 <div class="hpFill" id="playerHp"></div>
             </div>
             <div class="hero">🧙‍♂️</div>
-            <h2>Hero</h2>
+            <h2>勇者</h2>
         </div>
 
         <div class="character" id="slimeBox">
@@ -193,7 +200,7 @@ button{
                 <div class="hpFill" id="enemyHp"></div>
             </div>
             <div class="slime">🟢</div>
-            <h2>Slime</h2>
+            <h2>史莱姆</h2>
         </div>
 
     </div>
@@ -251,7 +258,7 @@ function checkAnswer(answer){
 
     if(answer === correctAnswer){
 
-        result.innerHTML = "✅ Correct!";
+        result.innerHTML = "✅ 回答正确！";
         result.style.color = "green";
 
         enemyHP -= 20;
@@ -272,12 +279,12 @@ function checkAnswer(answer){
             coins += 20;
             exp += 20;
 
-            result.innerHTML = "🎉 Slime Defeated!";
+            result.innerHTML = "🎉 成功击败史莱姆！";
         }
 
     }else{
 
-        result.innerHTML = "❌ Wrong!";
+        result.innerHTML = "❌ 回答错误！";
         result.style.color = "red";
 
         playerHP -= 15;
@@ -286,7 +293,7 @@ function checkAnswer(answer){
 
         if(playerHP <= 0){
 
-            alert("Game Over!");
+            alert("游戏结束！");
 
             playerHP = 100;
             enemyHP = 100;
@@ -342,3 +349,13 @@ updateUI();
 
 </body>
 </html>
+```
+
+然后：
+
+1. 全部复制
+2. 覆盖你 GitHub 的 `index.html`
+3. Commit changes
+4. 等 1 分钟刷新网页
+
+你的中文版数学 RPG 就会上线。
