@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WISE Math Battle V1</title>
+
+<style>
+body{
+    margin:0;
+    font-family:'Trebuchet MS',sans-serif;
+    background:linear-gradient(to bottom,#7ad7ff,#dff6ff);
+    overflow:hidden;
+}
+
+#game{
+    width:100vw;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.topBar{
+    width:95%;
+    display:flex;
+    justify-content:space-between;
+    margin-top:10px;
+    color:#fff;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.card{
+    background:white;
+    padding:10px 20px;
+    border-radius:20px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.2);
+}
+
+.battleArea{
+    width:100%;
+    flex:1;
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+}
+
+.character{
+    text-align:center;
+    position:relative;
+}
+
+.hpBar{
+    width:150px;
+    height:20px;
+    background:#ddd;
+    border-radius:20px;
+    overflow:hidden;
+    margin:auto;
+    margin-bottom:10px;
+}
+
+.hpFill{
+    height:100%;
+    background:limegreen;
+    width:100%;
+    transition:0.3s;
+}
+
+.hero{
+    font-size:100px;
+}
+
+.slime{
+    font-size:100px;
+    animation:float 2s infinite ease-in-out;
+}
+
+@keyframes float{
+    0%{transform:translateY(0px);}
+    50%{transform:translateY(-10px);}
+    100%{transform:translateY(0px);}
+}
+
+.questionBox{
+    width:90%;
+    max-width:500px;
+    background:white;
+    border-radius:25px;
+    padding:20px;
+    margin-bottom:20px;
+    text-align:center;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+.question{
+    font-size:40px;
+    margin-bottom:20px;
+    font-weight:bold;
+}
+
+.buttons{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+}
+
+button{
+    width:80px;
+    height:80px;
+    border:none;
+    border-radius:20px;
+    font-size:35px;
+    font-weight:bold;
+    cursor:pointer;
+    background:#ffcc00;
+    transition:0.2s;
+}
+
+button:hover{
+    transform:scale(1.1);
+}
+
+.result{
+    margin-top:15px;
+    font-size:24px;
+    font-weight:bold;
+}
+
+.damage{
+    position:absolute;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:35px;
+    color:red;
+    animation:damageMove 1s forwards;
+}
+
+@keyframes damageMove{
+    0%{
+        opacity:1;
+        transform:translate(-50%,0);
+    }
+    100%{
+        opacity:0;
+        transform:translate(-50%,-50px);
+    }
+}
+
+@media(max-width:700px){
+
+.hero,.slime{
+    font-size:70px;
+}
+
+.question{
+    font-size:30px;
+}
+
+button{
+    width:70px;
+    height:70px;
+}
+}
+</style>
+</head>
+
+<body>
+
+<div id="game">
+
+    <div class="topBar">
+        <div class="card">⭐ EXP: <span id="exp">0</span></div>
+        <div class="card">🪙 Coins: <span id="coins">0</span></div>
+        <div class="card">🏆 Level: <span id="level">1</span></div>
+    </div>
+
+    <div class="battleArea">
+
+        <div class="character">
+            <div class="hpBar">
+                <div class="hpFill" id="playerHp"></div>
+            </div>
+            <div class="hero">🧙‍♂️</div>
+            <h2>Hero</h2>
+        </div>
+
+        <div class="character" id="slimeBox">
+            <div class="hpBar">
+                <div class="hpFill" id="enemyHp"></div>
+            </div>
+            <div class="slime">🟢</div>
+            <h2>Slime</h2>
+        </div>
+
+    </div>
+
+    <div class="questionBox">
+
+        <div class="question" id="question">
+            45 __ 32
+        </div>
+
+        <div class="buttons">
+            <button onclick="checkAnswer('>')">></button>
+            <button onclick="checkAnswer('<')"><</button>
+            <button onclick="checkAnswer('=')">=</button>
+        </div>
+
+        <div class="result" id="result"></div>
+
+    </div>
+
+</div>
+
+<script>
+
+let playerHP = 100;
+let enemyHP = 100;
+let exp = 0;
+let coins = 0;
+let level = 1;
+
+let correctAnswer = ">";
+
+function generateQuestion(){
+
+    let a = Math.floor(Math.random()*90)+10;
+    let b = Math.floor(Math.random()*90)+10;
+
+    if(a>b){
+        correctAnswer = ">";
+    }
+    else if(a<b){
+        correctAnswer = "<";
+    }
+    else{
+        correctAnswer = "=";
+    }
+
+    document.getElementById("question").innerHTML =
+        `${a} __ ${b}`;
+}
+
+function checkAnswer(answer){
+
+    const result = document.getElementById("result");
+
+    if(answer === correctAnswer){
+
+        result.innerHTML = "✅ Correct!";
+        result.style.color = "green";
+
+        enemyHP -= 20;
+
+        showDamage("slimeBox","-20");
+
+        exp += 10;
+        coins += 5;
+
+        if(exp >= level*50){
+            level++;
+        }
+
+        if(enemyHP <= 0){
+
+            enemyHP = 100;
+
+            coins += 20;
+            exp += 20;
+
+            result.innerHTML = "🎉 Slime Defeated!";
+        }
+
+    }else{
+
+        result.innerHTML = "❌ Wrong!";
+        result.style.color = "red";
+
+        playerHP -= 15;
+
+        showDamage(null,"-15");
+
+        if(playerHP <= 0){
+
+            alert("Game Over!");
+
+            playerHP = 100;
+            enemyHP = 100;
+            exp = 0;
+            coins = 0;
+            level = 1;
+        }
+    }
+
+    updateUI();
+    generateQuestion();
+}
+
+function updateUI(){
+
+    document.getElementById("playerHp").style.width =
+        playerHP + "%";
+
+    document.getElementById("enemyHp").style.width =
+        enemyHP + "%";
+
+    document.getElementById("exp").innerHTML = exp;
+    document.getElementById("coins").innerHTML = coins;
+    document.getElementById("level").innerHTML = level;
+}
+
+function showDamage(targetId,text){
+
+    let target;
+
+    if(targetId){
+        target = document.getElementById(targetId);
+    }else{
+        target = document.querySelector(".hero").parentElement;
+    }
+
+    const dmg = document.createElement("div");
+
+    dmg.classList.add("damage");
+    dmg.innerHTML = text;
+
+    target.appendChild(dmg);
+
+    setTimeout(()=>{
+        dmg.remove();
+    },1000);
+}
+
+generateQuestion();
+updateUI();
+
+</script>
+
+</body>
+</html>
